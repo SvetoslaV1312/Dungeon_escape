@@ -1,9 +1,16 @@
 #include <iostream>
 
 #include "utils.h" 
+#include "profiles.h" 
+
 
 int main()
 {
+    handlePlayerNames();
+
+
+
+    /*
     char myFirstMaze[4][3] =
     { {'0', '0','0'},
       {'0', '0','0'},
@@ -18,5 +25,6 @@ int main()
     }
     if (isOutOfMaze) std::cout << "you won";
     if (!isAlive()) std::cout << "you die";
+    */
     return 0;
 }

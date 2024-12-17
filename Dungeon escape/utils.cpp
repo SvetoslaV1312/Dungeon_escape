@@ -1,7 +1,5 @@
 #include "utils.h"  
 #include <iostream>
-
-
 #include <windows.h>
 
 //const size_t mazeSize = 3, MazeRows = 4, MazeCows = 3;
