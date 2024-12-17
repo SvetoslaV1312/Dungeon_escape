@@ -1,8 +1,11 @@
+#include "utils.h"  
+#include <iostream>
 
-/*#include <iostream>
+
 #include <windows.h>
-const size_t mazeSize = 3, MazeRows=4, MazeCows=3;
-int playerXpos=2, playerYpos=1, lives=3;
+
+//const size_t mazeSize = 3, MazeRows = 4, MazeCows = 3;
+int playerXpos = 2, playerYpos = 1, lives = 3;
 bool won = false;
 
 bool isAlive() {
@@ -25,7 +28,7 @@ void movePlayerUp(char maze[][mazeSize])
         lives--;
         return;
     }
-    if (isOutOfMaze(playerXpos-1, playerYpos))
+    if (isOutOfMaze(playerXpos - 1, playerYpos))
     {
         won = true;
         maze[playerXpos][playerYpos] = '0';
@@ -51,27 +54,9 @@ void printMaze(char maze[][mazeSize])
     {
         for (size_t j = 0; j < 3; j++)
         {
-            std::cout << maze[i][j]<<" ";
+            std::cout << maze[i][j] << " ";
         }
-        std::cout<<std::endl;
+        std::cout << std::endl;
     }
 }
-/*
-int main()
-{
-    char myFirstMaze[4][3] =
-    { {'0', '0','0'},
-      {'0', '0','0'},
-      {'0', '@','0'},
-      {'0', '#','0'} };
-    char input = 'a';
-    while (input != 0 && isAlive() && !won)
-    {
-        std::cin >> input;
-        movePlayer(myFirstMaze, input);
-        printMaze(myFirstMaze);
-    }
-    if (isOutOfMaze) std::cout << "you won";
-    if (!isAlive()) std::cout << "you die";
-}
-*/
+
