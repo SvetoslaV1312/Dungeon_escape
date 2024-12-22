@@ -1,13 +1,32 @@
 #include <iostream>
-
+#include <fstream>
 #include "utils.h" 
 #include "profiles.h" 
+#include "play.h" 
 
+/*
+void  play(std::string fileName)
+{
+    load(fileName, chosenlevel);
+    maze = filename;
+    char movemnt;
+    std::cin >> movemnt;
 
+    while (isAlive || movemnt=='e') //e=exit
+    {
+        std::cin >> movemnt;
+        movePlayer(maze,movemnt);
+        printMaze(maze);
+        saveprogess(maze);
+    }
+}
+*/
 int main()
 {
-    handlePlayerNames();
-
+    char* pickedPlayer=handlePlayerNameAndGameSession();
+    concat(pickedPlayer, "player", handlePlayerNameAndGameSession(), ".txt");
+    play(pickedPlayer);
+    //play("player_" + name + ".txt");
 
 
     /*

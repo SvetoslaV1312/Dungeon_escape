@@ -128,11 +128,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Dungeon escape.cpp" />
+    <ClCompile Include="play.cpp" />
     <ClCompile Include="profiles.cpp" />
     <ClCompile Include="temp_basic movement.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="play.h" />
     <ClInclude Include="profiles.h" />
     <ClInclude Include="temp_basic movement.h" />
     <ClInclude Include="utils.h" />
