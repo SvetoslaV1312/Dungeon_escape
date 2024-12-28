@@ -24,8 +24,11 @@ void  play(std::string fileName)
 int main()
 {
     char* pickedPlayer=handlePlayerNameAndGameSession();
-    concat(pickedPlayer, "player", handlePlayerNameAndGameSession(), ".txt");
-    play(pickedPlayer);
+    char name[10000] = {};
+    concat(name, "player", pickedPlayer, ".txt");
+    //concat(name, "Level", 1 + '0');
+    //std::cout << std::endl << name << std::endl;
+    loadLevelToPlay(name);
     //play("player_" + name + ".txt");
 
 
