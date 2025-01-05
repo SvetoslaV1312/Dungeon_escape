@@ -26,12 +26,13 @@ int main()
     char* pickedPlayer=handlePlayerNameAndGameSession();
     char name[10000] = {};
     concat(name, "player", pickedPlayer, ".txt");
-    //concat(name, "Level", 1 + '0');
-    //std::cout << std::endl << name << std::endl;
+   
     loadLevelToPlay(name);
     //play("player_" + name + ".txt");
 
-
+     //concat(name, "player", name, ".txt");//good
+    //concat(name, "Level", 1 + '0');
+    //std::cout << std::endl << name << std::endl;
     /*
     char myFirstMaze[4][3] =
     { {'0', '0','0'},

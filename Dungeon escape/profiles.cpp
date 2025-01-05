@@ -139,7 +139,7 @@ void makeNewSession(char* name) {
         return makeNewSession(name);
     }
     int variantNum=chooseRandomLevel(level);
-    int lives, coins, mazeRows, mazeCols, playerX, playerY;
+    int lives, coins, mazeRows, mazeCols, playerX, playerY, portalCount;
     int key;
     char maze[ARRAYSIZE][ARRAYSIZE] = { 0 }; 
     char premadeFileName[MAXLINELENGTH] = {0}; //eg Level1variation3.txt
@@ -171,12 +171,17 @@ void makeNewSession(char* name) {
     premadeFile >> mazeCols;
     premadeFile >> playerX;
     premadeFile >> playerY;
+    premadeFile >> portalCount;
+    int arrayOfPortals[10][2][2];
+    for (int i = 0; i < portalCount; i++) {
+            premadeFile >> arrayOfPortals[i][0][0];
+            premadeFile >> arrayOfPortals[i][0][1];
+    }
     ignoreSeparators(premadeFile);
 
-   // premadeFile.ignore(); // Skip newl
 
     for (int i = 0; i < mazeRows; i++) {
-        premadeFile.getline(maze[i], mazeCols + 1); //  one row of the maze
+        premadeFile.getline(maze[i], mazeCols + 1); //  one row maze
     }
 
     premadeFile.close();
@@ -197,6 +202,12 @@ void makeNewSession(char* name) {
     playerFile << mazeCols << std::endl;
     playerFile << playerX << std::endl;
     playerFile << playerY << std::endl;
+    playerFile << portalCount << std::endl;
+
+    for (int i = 0; i < portalCount; i++) {
+        playerFile << arrayOfPortals[i][0][0] << std::endl;;
+        playerFile << arrayOfPortals[i][0][1] << std::endl;;
+    }
 
     for (int i = 0; i < mazeRows; i++) {
         playerFile << maze[i] << std::endl;//check if works

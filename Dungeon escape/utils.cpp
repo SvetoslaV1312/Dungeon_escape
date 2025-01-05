@@ -1,7 +1,7 @@
 #include "utils.h"  
 #include <iostream>
 #include <windows.h>
-
+/*
 //const size_t mazeSize = 3, MazeRows = 4, MazeCows = 3;
 int playerXpos = 2, playerYpos = 1, lives = 3;
 bool won = false;
@@ -58,3 +58,4 @@ void printMaze(char maze[][mazeSize])
     }
 }
 
+*/
