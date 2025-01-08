@@ -48,7 +48,8 @@ void loadLevelToPlay(char* name)
         maze[i][j] = '\0'; 
     }
     std::cout << "If you want to exit press E/e.";
-    char input = 'null';
+    char input = ' ';
+    //problem with the coordinates.
     while (input!='e' )//|| isNotAlive(lives) || hasWon())
     {
         std::cin >> input;
@@ -85,8 +86,9 @@ void executeMovement(char input, char maze[][MAZESIZE], int& playerX, int& playe
             return;
         }
  
-        else if (maze[playerX - 1][playerY] == ' ')
+        else if (maze[playerX -1][playerY] == ' ')
         {
+            
             if (steppedOnChest) {
                 maze[playerX][playerY] = 'x';
                 maze[--playerX][playerY] = '@';
@@ -101,7 +103,8 @@ void executeMovement(char input, char maze[][MAZESIZE], int& playerX, int& playe
             else
             {
                 maze[playerX][playerY] = ' ';
-                maze[playerX][playerY] = '@';
+                maze[--playerX][playerY] = '@';
+               // std::cout << playerX << " " << playerY<<std::endl;
             }
         }
         else if (maze[playerX - 1][playerY] == 'c')//coin
