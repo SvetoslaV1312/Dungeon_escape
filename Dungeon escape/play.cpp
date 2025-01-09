@@ -77,80 +77,63 @@ void executeMovement(char input, char maze[][MAZESIZE], int& playerX, int& playe
     int& lives, int& coins, int arrayOfPortals[10][2][2],
     int& key, int portalCount, bool& traveledToPortal, bool& hasWon, bool& steppedOnChest)
 {
-    if (input == 'w' || input == 'W')
-    {
-        
-        if (maze[playerX - 1][playerY] == '#')
-        {
+    if (input == 'w' || input == 'W') {
+        if (maze[playerX - 1][playerY] == '#') {
             lives--;
             return;
         }
- 
-        else if (maze[playerX -1][playerY] == ' ')
-        {
-            
+        else if (maze[playerX - 1][playerY] == ' ') {
             if (steppedOnChest) {
                 maze[playerX][playerY] = 'x';
                 maze[--playerX][playerY] = '@';
                 steppedOnChest = false;
             }
-            else if (traveledToPortal)
-            {
+            else if (traveledToPortal) {
                 maze[playerX][playerY] = '%';
                 maze[--playerX][playerY] = '@';
                 traveledToPortal = false;
             }
-            else
-            {
+            else {
                 maze[playerX][playerY] = ' ';
                 maze[--playerX][playerY] = '@';
-               // std::cout << playerX << " " << playerY<<std::endl;
             }
         }
-        else if (maze[playerX - 1][playerY] == 'c')//coin
-        {
+        else if (maze[playerX - 1][playerY] == 'c') { // coin
             coins++;
             if (steppedOnChest) {
                 maze[playerX][playerY] = 'x';
                 maze[--playerX][playerY] = '@';
                 steppedOnChest = false;
             }
-            else if (traveledToPortal)
-            {
+            else if (traveledToPortal) {
                 maze[playerX][playerY] = '%';
                 maze[--playerX][playerY] = '@';
                 traveledToPortal = false;
             }
-            else
-            {
+            else {
                 maze[playerX][playerY] = ' ';
                 maze[--playerX][playerY] = '@';
             }
         }
-        else if (maze[playerX - 1][playerY] == '&')//key
-        {
+        else if (maze[playerX - 1][playerY] == '&') { // key
             key++;
             if (steppedOnChest) {
                 maze[playerX][playerY] = 'x';
                 maze[--playerX][playerY] = '@';
                 steppedOnChest = false;
             }
-            else if (traveledToPortal)
-            {
+            else if (traveledToPortal) {
                 maze[playerX][playerY] = '%';
                 maze[--playerX][playerY] = '@';
                 traveledToPortal = false;
             }
-            else
-            {
+            else {
                 maze[playerX][playerY] = ' ';
                 maze[--playerX][playerY] = '@';
             }
         }
-        else if (maze[playerX - 1][playerY] == 'x')//chest
-        {
-            if (key==1)
-            {
+        else if (maze[playerX - 1][playerY] == 'x') { // chest
+            if (key == 1) {
                 hasWon = 1;
                 return;
             }
@@ -159,28 +142,280 @@ void executeMovement(char input, char maze[][MAZESIZE], int& playerX, int& playe
                 maze[--playerX][playerY] = '@';
                 steppedOnChest = true;
             }
-            
         }
         else {
-            for (size_t i = 0; i < portalCount; i++)
-            {
-                if (playerX - 1 == arrayOfPortals[i][0][0] && playerY == arrayOfPortals[i][0][1])
-                {
-                     if (steppedOnChest)
-                     {
-                         maze[playerX][playerY] = 'x';
-                         steppedOnChest = false;
-                     }
-                     traveledToPortal = true;
-                     playerX = arrayOfPortals[i + 1][0][0];
-                     playerY = arrayOfPortals[i + 1][0][1];
-                     maze[playerX][playerY] = '@';
-                     break;
+            for (size_t i = 0; i < portalCount; i++) {
+                if (playerX - 1 == arrayOfPortals[i][0][0] && playerY == arrayOfPortals[i][0][1]) {
+                    if (i == portalCount - 1) i = -1;
+
+                    if (steppedOnChest) {
+                        maze[playerX][playerY] = 'x';
+                        steppedOnChest = false;
+                    }
+                    traveledToPortal = true;
+                    maze[playerX][playerY] = ' ';
+                    playerX = arrayOfPortals[i + 1][0][0];
+                    playerY = arrayOfPortals[i + 1][0][1];
+                    maze[playerX][playerY] = '@';
+                    break;
                 }
             }
         }
-
     }
+
+    else if (input == 'a' || input == 'A') {
+        if (maze[playerX][playerY - 1] == '#') {
+            lives--;
+            return;
+        }
+        else if (maze[playerX][playerY - 1] == ' ') {
+            if (steppedOnChest) {
+                maze[playerX][playerY] = 'x';
+                maze[playerX][--playerY] = '@';
+                steppedOnChest = false;
+            }
+            else if (traveledToPortal) {
+                maze[playerX][playerY] = '%';
+                maze[playerX][--playerY] = '@';
+                traveledToPortal = false;
+            }
+            else {
+                maze[playerX][playerY] = ' ';
+                maze[playerX][--playerY] = '@';
+            }
+        }
+        else if (maze[playerX][playerY - 1] == 'c') { // coin
+            coins++;
+            if (steppedOnChest) {
+                maze[playerX][playerY] = 'x';
+                maze[playerX][--playerY] = '@';
+                steppedOnChest = false;
+            }
+            else if (traveledToPortal) {
+                maze[playerX][playerY] = '%';
+                maze[playerX][--playerY] = '@';
+                traveledToPortal = false;
+            }
+            else {
+                maze[playerX][playerY] = ' ';
+                maze[playerX][--playerY] = '@';
+            }
+        }
+        else if (maze[playerX][playerY - 1] == '&') { // key
+            key++;
+            if (steppedOnChest) {
+                maze[playerX][playerY] = 'x';
+                maze[playerX][--playerY] = '@';
+                steppedOnChest = false;
+            }
+            else if (traveledToPortal) {
+                maze[playerX][playerY] = '%';
+                maze[playerX][--playerY] = '@';
+                traveledToPortal = false;
+            }
+            else {
+                maze[playerX][playerY] = ' ';
+                maze[playerX][--playerY] = '@';
+            }
+        }
+        else if (maze[playerX][playerY - 1] == 'x') { // chest
+            if (key == 1) {
+                hasWon = 1;
+                return;
+            }
+            else {
+                maze[playerX][playerY] = ' ';
+                maze[playerX][--playerY] = '@';
+                steppedOnChest = true;
+            }
+        }
+        else {
+            for (size_t i = 0; i < portalCount; i++) {
+                if (playerX == arrayOfPortals[i][0][0] && playerY - 1 == arrayOfPortals[i][0][1]) {
+                    if (i == portalCount - 1) i = -1;
+                    if (steppedOnChest) {
+                        maze[playerX][playerY] = 'x';
+                        steppedOnChest = false;
+                    }
+                    traveledToPortal = true;
+                    maze[playerX][playerY] = ' ';
+                    playerX = arrayOfPortals[i + 1][0][0];
+                    playerY = arrayOfPortals[i + 1][0][1];
+                    maze[playerX][playerY] = '@';
+                    break;
+                }
+            }
+        }
+    }
+    else if (input == 's' || input == 'S') {
+        if (maze[playerX + 1][playerY] == '#') {
+            lives--;
+            return;
+        }
+        else if (maze[playerX + 1][playerY] == ' ') {
+            if (steppedOnChest) {
+                maze[playerX][playerY] = 'x';
+                maze[++playerX][playerY] = '@';
+                steppedOnChest = false;
+            }
+            else if (traveledToPortal) {
+                maze[playerX][playerY] = '%';
+                maze[++playerX][playerY] = '@';
+                traveledToPortal = false;
+            }
+            else {
+                maze[playerX][playerY] = ' ';
+                maze[++playerX][playerY] = '@';
+            }
+        }
+        else if (maze[playerX + 1][playerY] == 'c') { // coin
+            coins++;
+            if (steppedOnChest) {
+                maze[playerX][playerY] = 'x';
+                maze[++playerX][playerY] = '@';
+                steppedOnChest = false;
+            }
+            else if (traveledToPortal) {
+                maze[playerX][playerY] = '%';
+                maze[++playerX][playerY] = '@';
+                traveledToPortal = false;
+            }
+            else {
+                maze[playerX][playerY] = ' ';
+                maze[++playerX][playerY] = '@';
+            }
+        }
+        else if (maze[playerX + 1][playerY] == '&') { // key
+            key++;
+            if (steppedOnChest) {
+                maze[playerX][playerY] = 'x';
+                maze[++playerX][playerY] = '@';
+                steppedOnChest = false;
+            }
+            else if (traveledToPortal) {
+                maze[playerX][playerY] = '%';
+                maze[++playerX][playerY] = '@';
+                traveledToPortal = false;
+            }
+            else {
+                maze[playerX][playerY] = ' ';
+                maze[++playerX][playerY] = '@';
+            }
+        }
+        else if (maze[playerX + 1][playerY] == 'x') { // chest
+            if (key == 1) {
+                hasWon = 1;
+                return;
+            }
+            else {
+                maze[playerX][playerY] = ' ';
+                maze[++playerX][playerY] = '@';
+                steppedOnChest = true;
+            }
+        }
+        else {
+            for (size_t i = 0; i < portalCount; i++) {
+                if (playerX + 1 == arrayOfPortals[i][0][0] && playerY == arrayOfPortals[i][0][1]) {
+                    if (i == portalCount - 1) i = -1;
+                    if (steppedOnChest) {
+                        maze[playerX][playerY] = 'x';
+                        steppedOnChest = false;
+                    }
+                    traveledToPortal = true;
+                    maze[playerX][playerY] = ' ';
+                    playerX = arrayOfPortals[i + 1][0][0];
+                    playerY = arrayOfPortals[i + 1][0][1];
+                    maze[playerX][playerY] = '@';
+                    break;
+                }
+            }
+        }
+    }
+    else if (input == 'd' || input == 'D') {
+        if (maze[playerX][playerY + 1] == '#') {
+            lives--;
+            return;
+        }
+        else if (maze[playerX][playerY + 1] == ' ') {
+            if (steppedOnChest) {
+                maze[playerX][playerY] = 'x';
+                maze[playerX][++playerY] = '@';
+                steppedOnChest = false;
+            }
+            else if (traveledToPortal) {
+                maze[playerX][playerY] = '%';
+                maze[playerX][++playerY] = '@';
+                traveledToPortal = false;
+            }
+            else {
+                maze[playerX][playerY] = ' ';
+                maze[playerX][++playerY] = '@';
+            }
+        }
+        else if (maze[playerX][playerY + 1] == 'c') { // coin
+            coins++;
+            if (steppedOnChest) {
+                maze[playerX][playerY] = 'x';
+                maze[playerX][++playerY] = '@';
+                steppedOnChest = false;
+            }
+            else if (traveledToPortal) {
+                maze[playerX][playerY] = '%';
+                maze[playerX][++playerY] = '@';
+                traveledToPortal = false;
+            }
+            else {
+                maze[playerX][playerY] = ' ';
+                maze[playerX][++playerY] = '@';
+            }
+        }
+        else if (maze[playerX][playerY + 1] == '&') { // key
+            key++;
+            if (steppedOnChest) {
+                maze[playerX][playerY] = 'x';
+                maze[playerX][++playerY] = '@';
+                steppedOnChest = false;
+            }
+            else if (traveledToPortal) {
+                maze[playerX][playerY] = '%';
+                maze[playerX][++playerY] = '@';
+                traveledToPortal = false;
+            }
+            else {
+                maze[playerX][playerY] = ' ';
+                maze[playerX][++playerY] = '@';
+            }
+        }
+        else if (maze[playerX][playerY + 1] == 'x') { // chest
+            if (key == 1) {
+                hasWon = 1;
+                return;
+            }
+            else {
+                maze[playerX][playerY] = ' ';
+                maze[playerX][++playerY] = '@';
+                steppedOnChest = true;
+            }
+        }
+        else {
+            for (size_t i = 0; i < portalCount; i++) {
+                if (playerX == arrayOfPortals[i][0][0] && playerY + 1 == arrayOfPortals[i][0][1]) {
+                    if (i == portalCount - 1) i = -1;
+                    if (steppedOnChest) {
+                        maze[playerX][playerY] = 'x';
+                        steppedOnChest = false;
+                    }
+                    traveledToPortal = true;
+                    maze[playerX][playerY] = ' ';
+                    playerX = arrayOfPortals[i + 1][0][0];
+                    playerY = arrayOfPortals[i + 1][0][1];
+                    maze[playerX][playerY] = '@';
+                    break;
+                }
+            }
+        }
+    }
+
     
 }
 

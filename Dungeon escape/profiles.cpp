@@ -135,8 +135,8 @@ void makeNewSession(char* name) {
     int level;
     std::cin >> level;
     if (level < 1 || level>3) {
-        std::cout << "Wrong number" << std::endl;
-        return makeNewSession(name);
+        std::cout << "Wrong number" << std::endl;//fix the wrong number exception !!!
+        return;//makeNewSession(name);
     }
     int variantNum=chooseRandomLevel(level);
     int lives, coins, mazeRows, mazeCols, playerX, playerY, portalCount;
