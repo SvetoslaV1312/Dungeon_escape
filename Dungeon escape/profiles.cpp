@@ -11,10 +11,21 @@
 
 char* handlePlayerNameAndGameSession() {
     std::cout << "If you have an account press 1. \nIf you want to register press 0: ";
-    int registered;
-    std::cin >> registered;
-    std::cin.ignore();
-
+    int registered=10;
+    while (true)
+    {
+        std::cin >> registered;
+        if ((registered == 0 || registered == 1) && std::cin.good())
+        {
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            break;
+        }
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "You eneterd wrong. Try again entering a valid number. " << std::endl;
+        //std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
+    //std::cin.ignore();
     static char name[MAXNAMESIZE]; // what if longer??
     if (registered == 1) {
         std::cout << "Enter your name: ";
@@ -59,13 +70,26 @@ char* handlePlayerNameAndGameSession() {
     if (previouslyPlayed) {
         std::cout << "Press 1 to continue previous level or press 0 to start a new level: ";
         int choice;
-        std::cin >> choice;
-        std::cin.ignore(); 
+        while (true)
+        {
+            std::cin >> choice;
+            if ((choice == 0 || choice == 1) && std::cin.good())
+            {
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                break;
+            }
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "You eneterd wrong. Try again entering a valid number. " << std::endl;
+            //std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
         if (choice == 0) {
             makeNewSession(name);
+            return name;
         }
         else if (choice == 1) {
             std::cout << "Loading previous session...\n";
+            return name;
         }
         else {
             std::cout << "Wrong input" << std::endl;
@@ -73,8 +97,8 @@ char* handlePlayerNameAndGameSession() {
     }
     else {
         makeNewSession(name);
+        return name;
     }
-    return name;
 }
 
 bool compare(const char* line, const char* name) {
@@ -139,7 +163,7 @@ void makeNewSession(char* name) {
         return;//makeNewSession(name);
     }
     int variantNum=chooseRandomLevel(level);
-    int lives, coins, mazeRows, mazeCols, playerX, playerY, portalCount;
+    int lives, coins, mazeRows, mazeCols, playerX, playerY, portalCount, steppedOnChest, steppedOnPortal;
     int key;
     char maze[ARRAYSIZE][ARRAYSIZE] = { 0 }; 
     char premadeFileName[MAXLINELENGTH] = {0}; //eg Level1variation3.txt
@@ -171,6 +195,8 @@ void makeNewSession(char* name) {
     premadeFile >> mazeCols;
     premadeFile >> playerX;
     premadeFile >> playerY;
+    premadeFile >> steppedOnChest;
+    premadeFile >> steppedOnPortal;
     premadeFile >> portalCount;
     int arrayOfPortals[10][2][2];
     for (int i = 0; i < portalCount; i++) {
@@ -202,6 +228,8 @@ void makeNewSession(char* name) {
     playerFile << mazeCols << std::endl;
     playerFile << playerX << std::endl;
     playerFile << playerY << std::endl;
+    playerFile << steppedOnChest << std::endl;
+    playerFile << steppedOnPortal << std::endl;
     playerFile << portalCount << std::endl;
 
     for (int i = 0; i < portalCount; i++) {
@@ -224,6 +252,45 @@ int chooseRandomLevel(int level)
         srand(time(0));
         return  rand() % 3;
 }
+
+void saveProgress(char* name, int level, int  lives, int coins, int mazeRows, int mazeColls, int key, int playerX, int playerY, int portalCount, bool steppedOnPortal, bool hasWon, bool steppedOnChest,
+    char maze[ARRAYSIZE][ARRAYSIZE], int arrayOfPortals[30][2][2])
+{
+    //char playerFileName[MAXLINELENGTH] = { 0 }; //eg Level1variation3.txt
+    //concat(playerFileName, "player", name, ".txt");
+    std::ofstream playerFile(name);
+    if (!playerFile) {
+        std::cerr << "Error: Could not open player file for saving.\n";
+        return;
+    }
+    // fix the writing with an empty row...
+    playerFile << level << std::endl;
+    playerFile << lives << std::endl;
+    playerFile << coins << std::endl;
+    playerFile << key << std::endl;;
+    playerFile << mazeRows << std::endl;
+    playerFile << mazeColls << std::endl;
+    playerFile << playerX << std::endl;
+    playerFile << playerY << std::endl;
+    playerFile << steppedOnChest << std::endl;
+    playerFile << steppedOnPortal << std::endl;
+    playerFile << portalCount << std::endl;
+
+    for (int i = 0; i < portalCount; i++) {
+        playerFile << arrayOfPortals[i][0][0] << std::endl;;
+        playerFile << arrayOfPortals[i][0][1] << std::endl;;
+    }
+
+    for (int i = 1; i <= mazeRows; i++) {
+        playerFile << maze[i] << std::endl;//check if works
+    }
+
+    playerFile.close();
+
+    std::cout << "Player file saved successfully with level data.\n";
+}
+
+
 
 /*
 void loadLevel(char* name) {

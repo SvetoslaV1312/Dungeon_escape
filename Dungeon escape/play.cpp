@@ -5,13 +5,14 @@
 #include <limits> 
 //#include <string>
 #include "play.h"
-const size_t MAXLINELENGTH = 100;
+#include "profiles.h" 
+//const size_t MAXLINELENGTH = 100;
 
 void loadLevelToPlay(char* name)
 {
     std::cout << "Level is being loaded..." << std::endl;
 	int level, lives, coins, mazeRows, mazeColls,key, playerX, playerY, portalCount;
-    bool traveledToPortal = false, hasWon = false, steppedOnChest=false;
+    bool steppedOnPortal, hasWon = false, steppedOnChest;
 	char maze[MAZESIZE][MAZESIZE];
     std::ifstream playerFile(name);
     if (!playerFile) {
@@ -26,6 +27,8 @@ void loadLevelToPlay(char* name)
     playerFile >> mazeColls;
     playerFile >> playerX;
     playerFile >> playerY;
+    playerFile >> steppedOnChest;
+    playerFile >> steppedOnPortal;
     playerFile >> portalCount;
     int arrayOfPortals[10][2][2];
     for (int i = 0; i < portalCount; i++) {
@@ -47,22 +50,25 @@ void loadLevelToPlay(char* name)
         }
         maze[i][j] = '\0'; 
     }
+    system("cls");
     std::cout << "If you want to exit press E/e.";
     char input = ' ';
-    //problem with the coordinates.
-    while (input!='e' )//|| isNotAlive(lives) || hasWon())
+    while (checkProgress(input, lives, hasWon))//|| isNotAlive(lives) || hasWon())
     {
+        printMovement(maze, mazeRows, mazeColls, lives, level, key, coins);
         std::cin >> input;
+
         system("cls");
         //input = getchar();
         //system("cls");
         executeMovement(input, maze, playerX, playerY, lives, 
-            coins, arrayOfPortals, key, portalCount, traveledToPortal, hasWon, steppedOnChest);
-        printMovement(maze, mazeRows, mazeColls);
-        //system("cls");
+            coins, arrayOfPortals, key, portalCount, steppedOnPortal, hasWon, steppedOnChest);
+        //checkProgress(input, lives, hasWon);
         
     }
-    delete[] line;
+    if (input == 'e') saveProgress(name, level, lives, coins, mazeRows, mazeColls, key, playerX, playerY, portalCount, steppedOnPortal, hasWon, steppedOnChest,
+        maze, arrayOfPortals);
+   // delete[] line;
 
 
     /*
@@ -72,6 +78,12 @@ void loadLevelToPlay(char* name)
     }
     */
 }
+
+bool checkProgress(char input, int  lives, bool hasWon)
+{
+
+}
+
 
 void executeMovement(char input, char maze[][MAZESIZE], int& playerX, int& playerY,
     int& lives, int& coins, int arrayOfPortals[10][2][2],
@@ -419,8 +431,18 @@ void executeMovement(char input, char maze[][MAZESIZE], int& playerX, int& playe
     
 }
 
-void printMovement(char maze[][MAZESIZE], int mazeRows, int mazeColls)
+void printMovement(char maze[][MAZESIZE], int mazeRows, int mazeColls, int lives, int level, int key, int coins)
 {
+    std::cout << "Level: " << level << std::endl;
+    std::cout << "Lives: " << lives << std::endl;
+    std::cout << "Coins: " << coins << std::endl;
+    std::cout << "Key: ";
+    if (!key)
+    {
+        std::cout << "key not found" << std::endl;
+    }
+    else   std::cout << "key found" << std::endl;
+
     for (size_t i = 1; i < mazeRows; i++)
     {
         for (size_t j = 0; j < mazeColls; j++)

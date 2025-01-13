@@ -16,7 +16,8 @@ void makeNewSession(char* name);
 bool compare(const char* line, const char* name);
 int chooseRandomLevel(int level);
 void ignoreSeparators(std::ifstream& file);
-
+void saveProgress(char* name, int level, int  lives, int coins, int mazeRows, int mazeColls, int key, int playerX, int playerY, int portalCount, bool traveledToPortal, bool hasWon, bool steppedOnChest,
+    char maze[ARRAYSIZE][ARRAYSIZE], int arrayOfPortals[30][2][2]);
 
 
 
