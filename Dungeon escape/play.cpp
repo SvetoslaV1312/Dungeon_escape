@@ -52,7 +52,7 @@ void loadLevelToPlay(char* name)
     }
     system("cls");
     std::cout << "If you want to exit press E/e.";
-    char input = ' ';
+    char input = 'w';
     while (checkProgress(input, lives, hasWon))//|| isNotAlive(lives) || hasWon())
     {
         printMovement(maze, mazeRows, mazeColls, lives, level, key, coins);
@@ -66,8 +66,15 @@ void loadLevelToPlay(char* name)
         //checkProgress(input, lives, hasWon);
         
     }
-    if (input == 'e') saveProgress(name, level, lives, coins, mazeRows, mazeColls, key, playerX, playerY, portalCount, steppedOnPortal, hasWon, steppedOnChest,
-        maze, arrayOfPortals);
+    if (input == 'e') {
+        saveProgress(name, level, lives, coins, mazeRows, mazeColls, key, playerX, playerY, portalCount, steppedOnPortal, hasWon, steppedOnChest,
+            maze, arrayOfPortals);
+        return;
+    }
+    if (hasWon) std::cout << "Congrats you have won";
+    if (lives==0) std::cout << "You have lost";
+    //std::remove(name);//deleting
+    std::ofstream file(name, std::ios::trunc);
    // delete[] line;
 
 
@@ -81,7 +88,10 @@ void loadLevelToPlay(char* name)
 
 bool checkProgress(char input, int  lives, bool hasWon)
 {
-
+    if (lives == 0) return false;
+    else if (input == 'e') return false;
+    else if (hasWon) return false;
+    return true;
 }
 
 
