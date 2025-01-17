@@ -10,16 +10,22 @@
 
 void loadLevelToPlay(char* name)
 {
-    std::cout << "Level is being loaded..." << std::endl;
-	int level, lives, coins, mazeRows, mazeColls,key, playerX, playerY, portalCount;
+    int level, lives, coins, mazeRows, mazeColls, key, playerX, playerY, portalCount;
     bool steppedOnPortal, hasWon = false, steppedOnChest;
-	char maze[MAZESIZE][MAZESIZE];
+    char maze[MAZESIZE][MAZESIZE];
     std::ifstream playerFile(name);
     if (!playerFile) {
         std::cerr << "Error: Could not open playerFile.txt for reading.\n";
         return;
     }
     playerFile >> level;
+    if (level == -858993460)
+    {
+        std::cout << "Unsucessful load of previous session."<<std::endl;
+        makeNewSession(name);
+        loadLevelToPlay(name);
+    }
+    std::cout << "Level is being loaded..." << std::endl;
     playerFile >> lives;
     playerFile >> coins;
     playerFile >> key;
@@ -38,50 +44,61 @@ void loadLevelToPlay(char* name)
     char* line = new char[mazeColls];
     //!!!!playerFile.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); fix the i=1 in print func
     //std::cout << std::endl << level << " " << lives << " " << coins << " " << key;
-    for (int i = 0; i < mazeRows; i++) {
+    for (int i = 0; i < mazeRows+1; i++) {
         playerFile.getline(line, mazeColls + 1); // Read one row of the maze
         int j = 0;
-        char* linePtr = line; 
+        char* linePtr = line;
 
         while (*linePtr) {
             maze[i][j] = *linePtr;
             linePtr++;
             j++;
         }
-        maze[i][j] = '\0'; 
+        maze[i][j] = '\0';
     }
     system("cls");
-    std::cout << "If you want to exit press E/e.";
     char input = ' ';
     while (checkProgress(input, lives, hasWon))//|| isNotAlive(lives) || hasWon())
     {
         printMovement(maze, mazeRows, mazeColls, lives, level, key, coins);
+        std::cout << std::endl << std::endl<< "If you want to exit press E/e." << std::endl;
+
         std::cin >> input;
 
         system("cls");
         //input = getchar();
         //system("cls");
-        executeMovement(input, maze, playerX, playerY, lives, 
+        executeMovement(input, maze, playerX, playerY, lives,
             coins, arrayOfPortals, key, portalCount, steppedOnPortal, hasWon, steppedOnChest);
         //checkProgress(input, lives, hasWon);
-        
+
     }
-    if (input == 'e') saveProgress(name, level, lives, coins, mazeRows, mazeColls, key, playerX, playerY, portalCount, steppedOnPortal, hasWon, steppedOnChest,
-        maze, arrayOfPortals);
-   // delete[] line;
-
-
-    /*
-    while (std::getline(playerFile, line)) //vkarva matrix v file na playera
+    if (input == 'e') {
+        saveProgress(name, level, lives, coins, mazeRows, mazeColls, key, playerX, playerY, portalCount, steppedOnPortal, hasWon, steppedOnChest,
+            maze, arrayOfPortals);
+        return;
+    }
+    if (hasWon)
     {
-        savedFile << line << "\n";
+        std::cout << "Congrats you have won";
+        std::ofstream file(name, std::ios::trunc);
     }
-    */
+    if (lives == 0) 
+    {
+        std::cout << "You have lost";
+        std::ofstream file(name, std::ios::trunc);
+    }
+     //delete[] line; // why does this make a heap corruption
+
+
 }
 
 bool checkProgress(char input, int  lives, bool hasWon)
 {
-
+    if (lives == 0) return false;
+    else if (input == 'e') return false;
+    else if (hasWon) return false;
+    return true;
 }
 
 
@@ -428,7 +445,7 @@ void executeMovement(char input, char maze[][MAZESIZE], int& playerX, int& playe
         }
     }
 
-    
+
 }
 
 void printMovement(char maze[][MAZESIZE], int mazeRows, int mazeColls, int lives, int level, int key, int coins)
@@ -443,7 +460,7 @@ void printMovement(char maze[][MAZESIZE], int mazeRows, int mazeColls, int lives
     }
     else   std::cout << "key found" << std::endl;
 
-    for (size_t i = 1; i < mazeRows; i++)
+    for (size_t i = 1; i < mazeRows+1; i++)
     {
         for (size_t j = 0; j < mazeColls; j++)
         {
@@ -452,4 +469,3 @@ void printMovement(char maze[][MAZESIZE], int mazeRows, int mazeColls, int lives
         std::cout << std::endl;
     }
 }
-

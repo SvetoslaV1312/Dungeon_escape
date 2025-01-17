@@ -2,6 +2,8 @@
 #include <fstream>
 #include<cstdlib>
 #include<ctime>
+#include <chrono>
+#include <thread>
 
 //#include <cstring> // For strlen
 #include "profiles.h"
@@ -9,9 +11,10 @@
 //const size_t MAXNAMESIZE = 51;
 //const size_t MAXLINELENGTH = 100;
 
-char* handlePlayerNameAndGameSession() {
+char* handlePlayerNameAndGameSession(char* name) {
+    system("cls");
     std::cout << "If you have an account press 1. \nIf you want to register press 0: ";
-    int registered=10;
+    int registered=0;
     while (true)
     {
         std::cin >> registered;
@@ -26,7 +29,7 @@ char* handlePlayerNameAndGameSession() {
         //std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
     //std::cin.ignore();
-    static char name[MAXNAMESIZE]; // what if longer??
+   // static char name[MAXNAMESIZE]; // what if longer??
     if (registered == 1) {
         std::cout << "Enter your name: ";
         std::cin.getline(name, MAXNAMESIZE);
@@ -45,8 +48,10 @@ char* handlePlayerNameAndGameSession() {
         nameFile.close();
 
         if (!nameFound) {
+
             std::cout << "Login was not successful." << std::endl;
-            return handlePlayerNameAndGameSession();
+            std::this_thread::sleep_for(std::chrono::seconds(2));
+            return handlePlayerNameAndGameSession(name);
         }
     }
     else if (registered == 0) {
@@ -65,8 +70,11 @@ char* handlePlayerNameAndGameSession() {
         std::cout << "Wrong input" << std::endl;
         return nullptr;
     }
-
     bool previouslyPlayed = checkifPlayed(name);
+    //check if works...
+    //char newname[70] = {};//make it into one array
+    concat(name, "player", name, ".txt");
+    //name = newname;
     if (previouslyPlayed) {
         std::cout << "Press 1 to continue previous level or press 0 to start a new level: ";
         int choice;
@@ -83,6 +91,7 @@ char* handlePlayerNameAndGameSession() {
             std::cout << "You eneterd wrong. Try again entering a valid number. " << std::endl;
             //std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
+
         if (choice == 0) {
             makeNewSession(name);
             return name;
@@ -111,25 +120,39 @@ bool compare(const char* line, const char* name) {
 }
 
 void concat(char* fileName, const char* word1,  char* word2, const char* word3) {
-   // while (*fileName) { fileName++; }
+    char temp[MAXLINELENGTH] = { 0 }; 
+    char* tempPtr = temp; 
 
     while (*word1) {
-        *fileName = *word1;
-        fileName++;
+        *tempPtr = *word1;
+        tempPtr++;
         word1++;
     }
+
     while (*word2) {
-        *fileName = *word2;
-        fileName++;
+        *tempPtr = *word2;
+        tempPtr++;
         word2++;
     }
+
     while (*word3) {
-        *fileName = *word3;
-        fileName++;
+        *tempPtr = *word3;
+        tempPtr++;
         word3++;
     }
-    *fileName = '\0'; 
+
+    *tempPtr = '\0'; // Null-terminate the string
+
+    // Copy the result back to fileName
+    tempPtr = temp; // Reset tempPtr to the beginning of temp
+    while (*tempPtr) {
+        *fileName = *tempPtr;
+        fileName++;
+        tempPtr++;
+    }
+    *fileName = '\0'; // Null-terminate the string
 }
+
 void concat(char* fileName, const char* word1, char symbol) {
     while (*fileName) { fileName++; }
     while (*word1) {
@@ -154,13 +177,21 @@ void ignoreSeparators(std::ifstream& file) {
         file.ignore();
     }
 }
-void makeNewSession(char* name) {
+void makeNewSession(char* name) {   
     std::cout << "Choose your level from 1 to 3: ";
     int level;
-    std::cin >> level;
-    if (level < 1 || level>3) {
-        std::cout << "Wrong number" << std::endl;//fix the wrong number exception !!!
-        return;//makeNewSession(name);
+    while (true)
+    {
+        std::cin >> level;
+        if ((level >= 1 && level <= 3) && std::cin.good())
+        {
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            break;
+        }
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "You eneterd wrong. Try again entering a valid number. " << std::endl;
+        //std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
     int variantNum=chooseRandomLevel(level);
     int lives, coins, mazeRows, mazeCols, playerX, playerY, portalCount, steppedOnChest, steppedOnPortal;
@@ -168,14 +199,16 @@ void makeNewSession(char* name) {
     char maze[ARRAYSIZE][ARRAYSIZE] = { 0 }; 
     char premadeFileName[MAXLINELENGTH] = {0}; //eg Level1variation3.txt
     concat(premadeFileName, "Level", level+'0');
-    concat(premadeFileName, "variation", 3 + '0');//set for now to 3 should be !!!!!variationNum
+    concat(premadeFileName, "variation", variantNum + '0');//set for now to 3 should be !!!!!variationNum
     concat(premadeFileName, ".txt", '\0');
 
     //printf("%s\n", premadeFileName); // Output: Level1variation3.txt
 
     //std::cout << premadeFileName << std::endl;
-    char playerFileName[MAXLINELENGTH] = {0};
-    concat(playerFileName, "player", name, ".txt");//good
+   char*  playerFileName = name;
+    //add after opit
+    //     char playerFileName[MAXLINELENGTH] = {0};
+    //concat(playerFileName, "player", name, ".txt");//good
 
 
     //snprintf(playerFileName, MAXLINELENGTH, "player_%s.txt", name);//ot neta
@@ -204,7 +237,6 @@ void makeNewSession(char* name) {
             premadeFile >> arrayOfPortals[i][0][1];
     }
     ignoreSeparators(premadeFile);
-
 
     for (int i = 0; i < mazeRows; i++) {
         premadeFile.getline(maze[i], mazeCols + 1); //  one row maze

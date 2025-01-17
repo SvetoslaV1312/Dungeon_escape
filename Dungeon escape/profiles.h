@@ -8,8 +8,8 @@ const size_t ARRAYSIZE = 30;
 
 
 // Function to handle player names and levels
-char* handlePlayerNameAndGameSession();
-void concat(char* fileName, const char* word1, char* word2, const char* word3);
+char* handlePlayerNameAndGameSession(char* name);
+void concat(char* fileName,const  char* word1, char* word2, const char* word3);
 bool checkifPlayed(char name[MAXNAMESIZE]);
 void makeNewSession(char* name);
 //void loadLevel(char* name);

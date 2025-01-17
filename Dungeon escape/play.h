@@ -16,4 +16,5 @@ void executeMovement(char input, char maze[][MAZESIZE], int& playerX, int& playe
     int& lives, int& coins, int arrayOfPortals[10][2][2],
     int& key, int portalCount, bool& steppedOnPortal, bool& hasWon, bool& steppedOnChest);
 void printMovement(char maze[][MAZESIZE], int mazeRows, int mazeColls, int lives, int level, int key, int coins);
+bool checkProgress(char input, int  lives, bool hasWon);
 
