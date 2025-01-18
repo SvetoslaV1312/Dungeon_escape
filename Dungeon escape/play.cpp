@@ -57,6 +57,7 @@ void loadLevelToPlay(char* name)
         maze[i][j] = '\0';
     }
     system("cls");
+    std::cout << "If you want to exit press E/e.";
     char input = ' ';
     while (checkProgress(input, lives, hasWon))//|| isNotAlive(lives) || hasWon())
     {
@@ -73,22 +74,9 @@ void loadLevelToPlay(char* name)
         //checkProgress(input, lives, hasWon);
 
     }
-    if (input == 'e') {
-        saveProgress(name, level, lives, coins, mazeRows, mazeColls, key, playerX, playerY, portalCount, steppedOnPortal, hasWon, steppedOnChest,
-            maze, arrayOfPortals);
-        return;
-    }
-    if (hasWon)
-    {
-        std::cout << "Congrats you have won";
-        std::ofstream file(name, std::ios::trunc);
-    }
-    if (lives == 0) 
-    {
-        std::cout << "You have lost";
-        std::ofstream file(name, std::ios::trunc);
-    }
-     //delete[] line; // why does this make a heap corruption
+    if (input == 'e') saveProgress(name, level, lives, coins, mazeRows, mazeColls, key, playerX, playerY, portalCount, steppedOnPortal, hasWon, steppedOnChest,
+        maze, arrayOfPortals);
+   // delete[] line;
 
 
 }
