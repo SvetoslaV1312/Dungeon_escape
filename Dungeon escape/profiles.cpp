@@ -1,15 +1,21 @@
+/**
+*Solution to course project # <3>
+*Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia
+University
+* Winter semester 2024 / 2025
+* @author ‹Svetoslav Tsvyatkov>
+*@idnumber ‹9MI0600427>
+*@compiler <VC GCC>
+*‹Handles player account and level creation>
+*/
+
+
 #include <iostream>
 #include <fstream>
 #include<cstdlib>
 #include<ctime>
-#include <chrono>
-#include <thread>
-
-//#include <cstring> // For strlen
 #include "profiles.h"
-
-//const size_t MAXNAMESIZE = 51;
-//const size_t MAXLINELENGTH = 100;
 
 char* handlePlayerNameAndGameSession(char* name) {
     system("cls");
@@ -25,11 +31,8 @@ char* handlePlayerNameAndGameSession(char* name) {
         }
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        std::cout << "You eneterd wrong. Try again entering a valid number. " << std::endl;
-        //std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cerr << "You eneterd wrong. Try again entering a valid number. " << std::endl;
     }
-    //std::cin.ignore();
-   // static char name[MAXNAMESIZE]; // what if longer??
     if (registered == 1) {
         std::cout << "Enter your name: ";
         std::cin.getline(name, MAXNAMESIZE);
@@ -50,7 +53,7 @@ char* handlePlayerNameAndGameSession(char* name) {
         if (!nameFound) {
 
             std::cout << "Login was not successful." << std::endl;
-            std::this_thread::sleep_for(std::chrono::seconds(2));
+            //std::this_thread::sleep_for(std::chrono::seconds(2));
             return handlePlayerNameAndGameSession(name);
         }
     }
@@ -71,10 +74,7 @@ char* handlePlayerNameAndGameSession(char* name) {
         return nullptr;
     }
     bool previouslyPlayed = checkifPlayed(name);
-    //check if works...
-    //char newname[70] = {};//make it into one array
     concat(name, "player", name, ".txt");
-    //name = newname;
     if (previouslyPlayed) {
         std::cout << "Press 1 to continue previous level or press 0 to start a new level: ";
         int choice;
@@ -88,8 +88,7 @@ char* handlePlayerNameAndGameSession(char* name) {
             }
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::cout << "You eneterd wrong. Try again entering a valid number. " << std::endl;
-            //std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cerr << "You eneterd wrong. Try again entering a valid number. " << std::endl;
         }
 
         if (choice == 0) {
@@ -141,16 +140,15 @@ void concat(char* fileName, const char* word1,  char* word2, const char* word3) 
         word3++;
     }
 
-    *tempPtr = '\0'; // Null-terminate the string
+    *tempPtr = '\0'; 
 
-    // Copy the result back to fileName
-    tempPtr = temp; // Reset tempPtr to the beginning of temp
+    tempPtr = temp; 
     while (*tempPtr) {
         *fileName = *tempPtr;
         fileName++;
         tempPtr++;
     }
-    *fileName = '\0'; // Null-terminate the string
+    *fileName = '\0'; 
 }
 
 void concat(char* fileName, const char* word1, char symbol) {
@@ -191,7 +189,6 @@ void makeNewSession(char* name) {
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         std::cout << "You eneterd wrong. Try again entering a valid number. " << std::endl;
-        //std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
     int variantNum=chooseRandomLevel(level);
     int lives, coins, mazeRows, mazeCols, playerX, playerY, portalCount, steppedOnChest, steppedOnPortal;
@@ -199,19 +196,13 @@ void makeNewSession(char* name) {
     char maze[ARRAYSIZE][ARRAYSIZE] = { 0 }; 
     char premadeFileName[MAXLINELENGTH] = {0}; //eg Level1variation3.txt
     concat(premadeFileName, "Level", level+'0');
-    concat(premadeFileName, "variation", variantNum + '0');//set for now to 3 should be !!!!!variationNum
+    concat(premadeFileName, "variation", variantNum + '0');
     concat(premadeFileName, ".txt", '\0');
 
-    //printf("%s\n", premadeFileName); // Output: Level1variation3.txt
-
-    //std::cout << premadeFileName << std::endl;
+   
    char*  playerFileName = name;
-    //add after opit
-    //     char playerFileName[MAXLINELENGTH] = {0};
-    //concat(playerFileName, "player", name, ".txt");//good
+   
 
-
-    //snprintf(playerFileName, MAXLINELENGTH, "player_%s.txt", name);//ot neta
 
     std::ifstream premadeFile(premadeFileName);
     if (!premadeFile) {
@@ -219,7 +210,6 @@ void makeNewSession(char* name) {
         return;
     }
 
-    // Read level, lives, coins, maze dimensions, and maze data
     premadeFile >> level;
     premadeFile >> lives;
     premadeFile >> coins;
@@ -239,19 +229,17 @@ void makeNewSession(char* name) {
     ignoreSeparators(premadeFile);
 
     for (int i = 0; i < mazeRows; i++) {
-        premadeFile.getline(maze[i], mazeCols + 1); //  one row maze
+        premadeFile.getline(maze[i], mazeCols + 1); 
     }
 
     premadeFile.close();
 
-    // Open the player's file for writing
     std::ofstream playerFile(playerFileName);
     if (!playerFile) {
         std::cerr << "Error: Could not open player file for writing.\n";
         return;
     }
 
-    // Write the data to the player's file
     playerFile << level << std::endl;
     playerFile << lives << std::endl;
     playerFile << coins << std::endl;
@@ -270,7 +258,7 @@ void makeNewSession(char* name) {
     }
 
     for (int i = 0; i < mazeRows; i++) {
-        playerFile << maze[i] << std::endl;//check if works
+        playerFile << maze[i] << std::endl;
     }
 
     playerFile.close();
@@ -279,23 +267,24 @@ void makeNewSession(char* name) {
 }
 
 
-int chooseRandomLevel(int level)
-{
-        srand(time(0));
-        return  rand() % 3;
+void seedRandomGenerator() {
+    srand(unsigned int(time(0)));
 }
 
+int chooseRandomLevel(int level) {
+    seedRandomGenerator();
+    return (rand() % 3) + 1; 
+}
+
+
 void saveProgress(char* name, int level, int  lives, int coins, int mazeRows, int mazeColls, int key, int playerX, int playerY, int portalCount, bool steppedOnPortal, bool hasWon, bool steppedOnChest,
-    char maze[ARRAYSIZE][ARRAYSIZE], int arrayOfPortals[30][2][2])
+    char maze[ARRAYSIZE][ARRAYSIZE], int arrayOfPortals[MAXPORTALS][2][2])
 {
-    //char playerFileName[MAXLINELENGTH] = { 0 }; //eg Level1variation3.txt
-    //concat(playerFileName, "player", name, ".txt");
     std::ofstream playerFile(name);
     if (!playerFile) {
         std::cerr << "Error: Could not open player file for saving.\n";
         return;
     }
-    // fix the writing with an empty row...
     playerFile << level << std::endl;
     playerFile << lives << std::endl;
     playerFile << coins << std::endl;
@@ -314,7 +303,7 @@ void saveProgress(char* name, int level, int  lives, int coins, int mazeRows, in
     }
 
     for (int i = 1; i <= mazeRows; i++) {
-        playerFile << maze[i] << std::endl;//check if works
+        playerFile << maze[i] << std::endl;
     }
 
     playerFile.close();
@@ -322,86 +311,3 @@ void saveProgress(char* name, int level, int  lives, int coins, int mazeRows, in
     std::cout << "Player file saved successfully with level data.\n";
 }
 
-
-
-/*
-void loadLevel(char* name) {
-    char filename[MAXLINELENGTH];
-    concat(filename, "player", name, ".txt");
-    std::ofstream savedFile(filename);
-    if (!savedFile) {
-        std::cerr << "Error: Could not open " << filename << " for writing.\n";
-        return;
-    }
-    savedFile << "New session data\n"; // Placeholder for actual level data
-    savedFile.close();
-}
-
-
-    std::string name;
-    std::cout << "Enter your name: ";
-    std::cin >> name;
-
-    std::ifstream nameFile("Player_names.txt");
-    bool nameFound = false;
-
-    if (nameFile) {
-        std::string line;
-        while (std::getline(nameFile, line)) {
-            if (line == name) {
-                nameFound = true;
-                break;
-            }
-        }
-    }
-    nameFile.close();
-
-    if (!nameFound) {
-        std::ofstream outFile("Player_names.txt", std::ios::app);
-        if (!outFile) {
-            std::cerr << "Error: Could not open Player_names.txt for writing.\n";
-            return;
-        }
-        outFile << name << std::endl;
-        outFile.close();
-        std::cout << "Welcome, " << name << "! You've been added as a new player.\n";
-    }
-    else {
-        std::cout << "Welcome back, " << name << "!\n";
-    }
-    
-
-
-
-void loadPlayerLevel(const std::string& playerName) {
-    std::string fileName = "player_" + playerName + ".txt";
-    std::ifstream saveFile(fileName);
-    int lastLevel;
-
-    if (!saveFile) {
-        std::cout << "No save data found. Please choose a level between 1 and 3.\n";
-        std::cin >> lastLevel;
-        std::ofstream saveFile(fileName);
-    }
-
-    saveFile >> lastLevel;
-    saveFile.close();
-
-    std::cout << "Last level played: " << lastLevel << ".\n";
-}
-
-void savePlayerLevel(const std::string& playerName, int level) {
-    std::string fileName = "player_" + playerName + ".txt";
-    std::ofstream saveFile(fileName);
-
-    if (!saveFile) {
-        std::cerr << "Error: Could not open " << fileName << " for writing.\n";
-        return;
-    }
-
-    saveFile << level;
-    saveFile.close();
-
-    std::cout << "Progress saved. Current level: " << level << ".\n";
-}
-*/

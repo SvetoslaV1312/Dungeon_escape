@@ -24,12 +24,6 @@
     <ClCompile Include="Dungeon escape.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="temp_basic movement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="profiles.cpp">
       <Filter>Source Files\profiles</Filter>
     </ClCompile>
@@ -40,9 +34,6 @@
   <ItemGroup>
     <ClInclude Include="temp_basic movement.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="utils.h">
-      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="profiles.h">
       <Filter>Source Files\profiles</Filter>
